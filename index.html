@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Falcon Travel & Tourism | Dubai</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <div class="logo">Golden Falcon</div>
+
+    <div class="menu-toggle" id="menu-toggle">☰</div>
+
+    <nav id="nav-links">
+        <a href="#home">Home</a>
+        <a href="#services">Services</a>
+        <a href="#destinations">Destinations</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+    </nav>
+</header>
+
+<section class="hero" id="home">
+    <div class="hero-content">
+        <h1>Luxury Travel Redefined</h1>
+        <p>Exclusive travel experiences crafted in Dubai for the world.</p>
+        <a href="https://wa.me/971XXXXXXXXX" class="btn-gold">Book Now</a>
+    </div>
+</section>
+
+<section id="services">
+    <h2>Our Services</h2>
+    <div class="grid">
+        <div class="card">
+            <h3>Luxury Holiday Packages</h3>
+            <p>Tailored global experiences designed for premium travelers.</p>
+        </div>
+        <div class="card">
+            <h3>Visa Assistance</h3>
+            <p>Fast, secure and reliable visa processing support.</p>
+        </div>
+        <div class="card">
+            <h3>Flight & Hotel Booking</h3>
+            <p>Access to exclusive global flight and hotel deals.</p>
+        </div>
+    </div>
+</section>
+
+<section id="destinations">
+    <h2>Popular Destinations</h2>
+    <div class="grid">
+        <div class="card">Maldives</div>
+        <div class="card">Turkey</div>
+        <div class="card">Europe Tours</div>
+        <div class="card">Georgia</div>
+    </div>
+</section>
+
+<section id="about" class="light-section">
+    <h2>About Golden Falcon</h2>
+    <p>
+        Based in Dubai, Golden Falcon Travel & Tourism delivers precision,
+        luxury, and personalized service. Our mission is to craft seamless
+        journeys that reflect elegance and excellence.
+    </p>
+</section>
+
+<section id="contact">
+    <h2>Contact Us</h2>
+    <form id="contactForm">
+        <input type="text" placeholder="Full Name" required>
+        <input type="email" placeholder="Email Address" required>
+        <textarea placeholder="Your Message" required></textarea>
+        <button type="submit">Send Inquiry</button>
+    </form>
+</section>
+
+<footer>
+    <p>© 2026 Golden Falcon Travel & Tourism | Dubai, UAE</p>
+</footer>
+
+<a href="https://wa.me/971XXXXXXXXX" class="whatsapp-float">Chat</a>
+
+<!-- Place this at the very end of body -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('contactForm');
+
+    form.addEventListener('submit', async e => {
+        e.preventDefault();
+
+        const data = {
+            name: form[0].value,
+            email: form[1].value,
+            message: form[2].value
+        };
+
+        try {
+            const response = await fetch('http://127.0.0.1:3000/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.text();
+            alert(result);
+
+            form.reset();
+        } catch (err) {
+            console.error('Error sending request:', err);
+            alert('Failed to send message. See console for details.');
+        }
+    });
+});
+</script>
+
+</body>
+</html>
