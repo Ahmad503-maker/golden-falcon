@@ -70,11 +70,11 @@
 <section id="contact">
     <h2>Contact Us</h2>
     <form id="contactForm">
-        <input type="text" placeholder="Full Name" required>
-        <input type="email" placeholder="Email Address" required>
-        <textarea placeholder="Your Message" required></textarea>
-        <button type="submit">Send Inquiry</button>
-    </form>
+    <input type="text" id="name" name="name" placeholder="Full Name" autocomplete="name" required>
+    <input type="email" id="email" name="email" placeholder="Email Address" autocomplete="email" required>
+    <textarea id="message" name="message" placeholder="Your Message" autocomplete="off" required></textarea>
+    <button type="submit">Send Inquiry</button>
+</form> 
 </section>
 
 <footer>
@@ -87,14 +87,12 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('contactForm');
-
     form.addEventListener('submit', async e => {
         e.preventDefault();
-
         const data = {
-            name: form[0].value,
-            email: form[1].value,
-            message: form[2].value
+            name: form.name.value,
+            email: form.email.value,
+            message: form.message.value
         };
 
         try {
@@ -106,7 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const result = await response.text();
             alert(result);
-
             form.reset();
         } catch (err) {
             console.error('Error sending request:', err);

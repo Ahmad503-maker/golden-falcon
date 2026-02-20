@@ -1,19 +1,14 @@
 {
   "name": "golden-falcon",
   "version": "1.0.0",
-  "description": "Backend for Golden Falcon Travel & Tourism",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
-    "body-parser": "^2.2.2",
     "cors": "^2.8.6",
     "express": "^5.2.1",
-    "mysql2": "^3.17.3"
+    "@sendgrid/mail": "^7.9.0",
+    "dotenv": "^17.3.1"
   }
 }

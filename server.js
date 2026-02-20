@@ -1,59 +1,37 @@
+require('dotenv').config();
 const express = require('express');
-const mysql = require('mysql2');
 const cors = require('cors');
 const path = require('path');
+const sgMail = require('@sendgrid/mail');
 
-const app = express(); // <-- Declare app first
+const app = express();
 const port = process.env.PORT || 3000;
 
-// Serve static files
+app.use(cors());
+app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
-app.use(cors());
-app.use(express.json()); // replaces bodyParser.json()
+// SendGrid setup
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-// MySQL connection
-const db = mysql.createConnection({
-  host: process.env.MYSQLHOST,
-  user: process.env.MYSQLUSER,
-  password: process.env.MYSQLPASSWORD,
-  database: process.env.MYSQLDATABASE,
-  port: process.env.MYSQLPORT
-});
+app.post('/api/contact', async (req, res) => {
+    const { name, email, message } = req.body;
 
-// Connect to DB
-db.connect(err => {
-  if (err) {
-    console.error('DB Connection Error:', err);
-  } else {
-    console.log('✅ Connected to Railway MySQL');
-  }
-});
+    const msg = {
+        to: process.env.EMAIL_TO, // your email
+        from: process.env.EMAIL_TO, // sender email (must be verified in SendGrid)
+        subject: `New Inquiry from ${name}`,
+        text: `Name: ${name}\nEmail: ${email}\nMessage:\n${message}`,
+    };
 
-// Contact form route
-app.post('/api/contact', (req, res) => {
-  console.log('Received POST request to /api/contact');
-  console.log('Request body:', req.body);
-
-  const { name, email, message } = req.body;
-
-  const query = `
-    INSERT INTO contacts (name, email, message)
-    VALUES (?, ?, ?)
-  `;
-
-  db.query(query, [name, email, message], (err) => {
-    if (err) {
-      console.error('Error saving message:', err);
-      return res.status(500).send('Error saving message');
+    try {
+        await sgMail.send(msg);
+        console.log('Email sent!');
+        res.send('Message sent successfully!');
+    } catch (error) {
+        console.error('Error sending email:', error);
+        res.status(500).send('Failed to send email. Check server logs.');
     }
-
-    console.log(`Message saved: Name=${name}, Email=${email}`);
-    res.send('Message saved successfully!');
-  });
 });
 
-// Server listening
-app.listen(port, () => {
-  console.log(`🚀 Server running on port ${port}`);
-});
+app.listen(port, () => console.log(`Server running on port ${port}`));
