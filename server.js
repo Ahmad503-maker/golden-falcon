@@ -12,6 +12,7 @@ app.use(express.static(path.join(__dirname)));
 app.use(cors());
 app.use(express.json()); // replaces bodyParser.json()
 
+// MySQL connection
 const db = mysql.createConnection({
   host: process.env.MYSQLHOST,
   user: process.env.MYSQLUSER,
@@ -20,16 +21,20 @@ const db = mysql.createConnection({
   port: process.env.MYSQLPORT
 });
 
+// Connect to DB
 db.connect(err => {
   if (err) {
     console.error('DB Connection Error:', err);
   } else {
-    console.log('Connected to Railway MySQL');
+    console.log('✅ Connected to Railway MySQL');
   }
 });
 
 // Contact form route
 app.post('/api/contact', (req, res) => {
+  console.log('Received POST request to /api/contact');
+  console.log('Request body:', req.body);
+
   const { name, email, message } = req.body;
 
   const query = `
@@ -39,14 +44,16 @@ app.post('/api/contact', (req, res) => {
 
   db.query(query, [name, email, message], (err) => {
     if (err) {
-      console.error(err);
+      console.error('Error saving message:', err);
       return res.status(500).send('Error saving message');
     }
 
+    console.log(`Message saved: Name=${name}, Email=${email}`);
     res.send('Message saved successfully!');
   });
 });
 
+// Server listening
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  console.log(`🚀 Server running on port ${port}`);
 });
